@@ -1,0 +1,30 @@
+/* DriftingGratingShader.vert.txt */
+
+/* Attributes passed from Screen(): See the ProceduralShadingAPI.m file for infos: */
+attribute vec4 auxParameters0;
+attribute vec4 auxParameters1;
+attribute vec4 auxParameters2;
+
+varying float Count;
+varying float Cycles_Pixel;
+varying vec4  firstColor;
+varying vec4  secondColor;
+varying float Orientation;
+varying float Speed;
+
+void main()
+{
+       /* Apply standard geometric transformations to patch: */
+    gl_Position = ftransform();
+    gl_TexCoord[0] = gl_MultiTexCoord0;
+
+    /* Pass first and second ring color to fragment shader: */
+    firstColor  = auxParameters0;
+    secondColor = auxParameters1;
+
+    /* Pass shift, ring width and radius to fragment shader: */
+    Cycles_Pixel = auxParameters2[0];
+    Count = auxParameters2[1];
+    Orientation = auxParameters2[2];
+    Speed = auxParameters2[3];
+}
