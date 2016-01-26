@@ -1,0 +1,26 @@
+/* DriftingGratingShader.frag.txt */
+
+const float twopi = 2.0*3.141592653589793;
+
+/* Values passed from vertex shader: */
+varying float Count;
+varying float Cycles_Pixel;
+varying float Orientation;
+varying float Speed;
+varying vec4  firstColor;
+varying vec4  secondColor;
+
+void main()
+{
+    /* Query current output texel position: */
+    vec2 pos = gl_TexCoord[0].xy;
+
+    /* Convert distance from units of pixels into units of ringwidths, apply shift offset: */
+    float orient_vec = sin(Orientation)*pos[0]+cos(Orientation)*pos[1];
+    float mix_coeff = 1.0+(0.5*sin(twopi*Cycles_Pixel*(orient_vec)+twopi*Speed*Count));
+
+    /* Mix the two colors stored in gl_Color and secondColor, using the slow
+     * sine-wave weight term in d as a mix weight between 0.0 and 1.0:
+     */
+    gl_FragColor = mix(firstColor, secondColor, mix_coeff);
+}
