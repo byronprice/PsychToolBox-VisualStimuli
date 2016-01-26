@@ -1,2 +1,2 @@
 # PsychToolBox_VisualStimuli
-Code for arbitrary generation of drifting gratings using openGL and the PsychToolBox.
+Code for arbitrary generation of drifting gratings using openGL and the PsychToolBox. Place all three files in the same directory as Pyschtoolbox and then call the Byron_DriftingGrating.m file.  Try Byron_DriftingGrating(1,1,1,20,0,10) , which will give a grating with 1 cycle/degree spatial frequency, 1 cycle/second speed, contrast of 1, assumed observer position of 20 cm from the screen, 0 degree orientation (horizontal bars), and displayed for 10 seconds. 
