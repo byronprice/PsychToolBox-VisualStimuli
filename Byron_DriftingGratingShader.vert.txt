@@ -1,4 +1,4 @@
-/* DriftingGratingShader.vert.txt */
+/* Byron_DriftingGratingShader.vert.txt */
 
 /* Attributes passed from Screen(): See the ProceduralShadingAPI.m file for infos: */
 attribute vec4 auxParameters0;
