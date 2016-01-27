@@ -1,5 +1,5 @@
 function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Orientation,Display_Time)
-%Byron_DriftingGratings.m
+%Byron_DriftingGrating.m
 %  
 % INPUT: Spat_Freq - desired spatial frequency in units of cycles/degree
 %        Speed - speed of drifting, in units of cycles/second
@@ -16,7 +16,7 @@ function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Orie
 
 % Created: 16/01/26 at 24 Cummington, Boston
 %  Byron Price
-% Updated: 16/01/26
+% Updated: 16/01/28
 %  By: Byron Price
 
 if Contrast < 0 || Contrast > 1 
@@ -54,8 +54,8 @@ Screen('ColorRange', win, 1);
 [w_mm,h_mm] = Screen('DisplaySize',screenid);
 
 
-dgshader = [PsychtoolboxRoot 'PsychDemos/Byron_DriftingGratingShader.vert.txt'];
-GratingShader = LoadGLSLProgramFromFiles({ dgshader, [PsychtoolboxRoot 'PsychDemos/Byron_DriftingGratingShader.frag.txt'] }, 1);
+dgshader = [PsychtoolboxRoot '/Byron_DriftingGratingShader.vert.txt'];
+GratingShader = LoadGLSLProgramFromFiles({ dgshader, [PsychtoolboxRoot '/Byron_DriftingGratingShader.frag.txt'] }, 1);
 
 % Create a purely virtual texture 'ringtex' of size tw x th virtual pixels, i.e., the
 % full size of the window. Attach the GratingShader to it, to define
