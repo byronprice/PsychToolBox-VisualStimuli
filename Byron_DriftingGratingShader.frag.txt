@@ -1,4 +1,4 @@
-/* DriftingGratingShader.frag.txt */
+/* Byron_DriftingGratingShader.frag.txt */
 
 const float twopi = 2.0*3.141592653589793;
 
