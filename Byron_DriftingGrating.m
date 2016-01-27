@@ -52,7 +52,7 @@ Screen('ColorRange', win, 1);
 
 % screen size in millimeters
 [w_mm,h_mm] = Screen('DisplaySize',screenid);
-
+conv_factor = (w_mm/w_pixels+h_mm/h_pixels)/2;
 
 dgshader = [PsychtoolboxRoot '/Byron_DriftingGratingShader.vert.txt'];
 GratingShader = LoadGLSLProgramFromFiles({ dgshader, [PsychtoolboxRoot '/Byron_DriftingGratingShader.frag.txt'] }, 1);
@@ -79,7 +79,7 @@ count = 0;
 cycles_dist = Spat_Freq/((tan((2*pi)/360))*(Dist_To_Screen*10)); % convert cycles per degree to cycles per distance
      % on the screen, based on the input spatial frequency and the distance
      % to the screen in centimeters
-cycles_pixel = cycles_dist*(w_mm/w_pixels); % cycles per dist to cycles per pixel
+cycles_pixel = cycles_dist*conv_factor; % cycles per dist to cycles per pixel
 Orientation = Orientation*pi/180;
 Speed = Speed*ifi;
 
