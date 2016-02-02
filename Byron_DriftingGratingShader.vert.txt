@@ -4,6 +4,7 @@
 attribute vec4 auxParameters0;
 attribute vec4 auxParameters1;
 attribute vec4 auxParameters2;
+attribute vec4 auxParameters3;
 
 varying float Count;
 varying float Cycles_Pixel;
@@ -11,6 +12,9 @@ varying vec4  firstColor;
 varying vec4  secondColor;
 varying float Orientation;
 varying float Speed;
+varying float Radius;
+varying float wcenter;
+varying float hcenter;
 
 void main()
 {
@@ -27,4 +31,7 @@ void main()
     Count = auxParameters2[1];
     Orientation = auxParameters2[2];
     Speed = auxParameters2[3];
+    Radius = auxParameters3[0];
+    wcenter = auxParameters3[1];
+    hcenter = auxParameters3[2];
 }
