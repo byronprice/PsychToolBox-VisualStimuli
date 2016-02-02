@@ -1,4 +1,4 @@
-function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Orientation,Display_Time)
+function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Radius,Orientation,Display_Time)
 %Byron_DriftingGrating.m
 %  
 % INPUT: Spat_Freq - desired spatial frequency in units of cycles/degree
@@ -7,6 +7,7 @@ function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Orie
 %            full use of dynamic range)
 %        Dist_To_Screen - physical distance of observer from the screen, in
 %           units of cm
+%        Radius - radius of the grating in degrees of arc
 %        Orientation - desired orientation of the grating stimuli, 0 is for
 %           a horizontal sinusoidal grating (horizontal bars across width
 %           of screen) and increasing angles (0 to 360 degrees) rotates the
@@ -16,7 +17,7 @@ function [] = Byron_DriftingGrating(Spat_Freq,Speed,Contrast,Dist_To_Screen,Orie
 
 % Created: 16/01/26 at 24 Cummington, Boston
 %  Byron Price
-% Updated: 16/01/28
+% Updated: 16/02/02
 %  By: Byron Price
 
 if Contrast < 0 || Contrast > 1 
@@ -34,7 +35,6 @@ global GL;
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
-
 % Choose screen with maximum id - the secondary display:
 screenid = max(Screen('Screens'));
 
@@ -42,15 +42,13 @@ screenid = max(Screen('Screens'));
 % color of 128 = gray with 50% max intensity:
 win = Screen('OpenWindow', screenid,128);
 
-% Switch color specification to use the 0.0 - 1.0 range instead of the 0 -
-% 255 range. This is more natural for these kind of stimuli:
+% Switch color specification to use the 0.0 - 1.0 range
 Screen('ColorRange', win, 1);
 
-% Query window size: Need this to define center and radius of expanding
-% disk stimulus:
+% Query window size in pixels
 [w_pixels, h_pixels] = Screen('WindowSize', win);
 
-% screen size in millimeters
+% screen size in millimeters and a conversion factor to get from mm to pixels
 [w_mm,h_mm] = Screen('DisplaySize',screenid);
 conv_factor = (w_mm/w_pixels+h_mm/h_pixels)/2;
 
@@ -58,8 +56,7 @@ dgshader = [PsychtoolboxRoot '/Byron_DriftingGratingShader.vert.txt'];
 GratingShader = LoadGLSLProgramFromFiles({ dgshader, [PsychtoolboxRoot '/Byron_DriftingGratingShader.frag.txt'] }, 1);
 
 % Create a purely virtual texture 'ringtex' of size tw x th virtual pixels, i.e., the
-% full size of the window. Attach the GratingShader to it, to define
-% its "appearance":
+% full size of the window. Attach the GratingShader to it
 ringtex = Screen('SetOpenGLTexture', win, [], 0, GL.TEXTURE_RECTANGLE_EXT,w_pixels,h_pixels, 1, GratingShader);
 
 % Define first and second ring color as RGBA vector with normalized color
@@ -82,23 +79,21 @@ cycles_dist = Spat_Freq/((tan((2*pi)/360))*(Dist_To_Screen*10)); % convert cycle
 cycles_pixel = cycles_dist*conv_factor; % cycles per dist to cycles per pixel
 Orientation = Orientation*pi/180;
 Speed = Speed*ifi;
+wcenter = w_pixels/2;
+hcenter = h_pixels/2;
+Radius = Dist_To_Screen*tan(Radius*pi/180); % radius in degrees to radius in mm
+Radius = Radius/conv_factor;
 
-% Animation loop: Run until keypress:
+% Animation loop
 runs = ceil(Display_Time/ifi);
-while count < runs %~KbCheck
+while count < runs && ~KbCheck
     count = count + 1;
     
     % Draw the stimulus with its current parameter settings. We simply draw
-    % the procedural texture as any other texture via 'DrawTexture'. We
-    % leave all draw settings to their defaults, except the base drawing
-    % colors, which in our case defines the colors of the rings and the
-    % ringWidth, Radius and Shift parameters:
-    % The vector with additional parameters must have a length which is a
-    % multiple of four. Therefore - as we only have 7 parameters here - we
-    % pad the vector with an additional meaningless zero value to end up
-    % with a total length of 8 vector components.
-    %
-    Screen('DrawTexture', win, ringtex, [], [],[], [],[],[], [], [], [firstColor(1),firstColor(2),firstColor(3),firstColor(4),secondColor(1), secondColor(2), secondColor(3), secondColor(4),cycles_pixel,count,Orientation,Speed]);
+    % the procedural texture as any other texture via 'DrawTexture'
+    Screen('DrawTexture', win, ringtex, [], [],[], [],[],[], [], [], [firstColor(1),firstColor(2),firstColor(3),firstColor(4),... 
+            secondColor(1), secondColor(2), secondColor(3), secondColor(4),cycles_pixel,count,Orientation,Speed, ...
+            Radius,wcenter,hcenter,0]);
     
     % Request stimulus onset at next video refresh:
     vbl = Screen('Flip', win, vbl + ifi/2);
@@ -111,7 +106,7 @@ fprintf('Average redraw rate in Hz was: %f\n', avgfps);
 Display_Time = runs/avgfps;
 fprintf('Approximate display time in seconds was %f\n',Display_Time);
 
-% Close window, release all resources:
+% Close window
 Screen('CloseAll');
 end
 
