@@ -1,0 +1,34 @@
+/* DriftingSinGratingShader.frag.txt */
+
+const float twopi = 2.0*3.141592653589793;
+
+/* Values passed from vertex shader: */
+varying float Count;
+varying float Cycles_Pixel;
+varying float Orientation;
+varying float Speed;
+varying vec4  firstColor;
+varying vec4  secondColor;
+varying float xCenter;
+varying float yCenter;
+
+void main()
+{
+    /* Query current output texel position: */
+    vec2 pos = gl_TexCoord[0].xy;
+
+    /* Convert distance, apply shift offset: */
+    float x = pos[0]-xCenter;
+    float y = pos[1]-yCenter;
+   
+    /* calculate Gaussian kernel and sinusoidal grating */
+    float sigmasquare = xCenter*xCenter;
+    float kernel = exp(-(x*x/sigmasquare+y*y/sigmasquare));
+    float orient_vec = sin(Orientation)*x+cos(Orientation)*y; 
+    float mix_coeff = (0.5+0.5*sin(twopi*Cycles_Pixel*orient_vec+twopi*Speed*Count))*kernel;
+
+    /* Mix the two colors stored in firstColor and secondColor, using the
+     * sine-wave weight term in mix_coeff as a mix weight between 0.0 and 1.0:
+     */
+    gl_FragColor = mix(firstColor, secondColor,mix_coeff);
+}
