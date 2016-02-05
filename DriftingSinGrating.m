@@ -71,7 +71,7 @@ if nargin == 0
 end
 numGratings = size(Parameters,1);
 
-% Retrieve monitor refresh duration:
+% Retrieve monitor refresh duration
 ifi = Screen('GetFlipInterval', win);
 
 % screen size in millimeters and a conversion factor to get from mm to pixels
