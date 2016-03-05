@@ -62,8 +62,10 @@ function [F] = ReverseCorr_Analysis(S,R,timeStamps,Fs)
 %  onset and that the calcium imaging recording started just in time 
 %  with the first stimulus (which was a grey screen)
 
-startRecord = round(30/1000*Fs);
-endRecord = round(60/1000*Fs);
+period = [30,60]; % period after stimulus to include for spike-triggered
+       % average stimulus (in milliseconds)
+startRecord = round(period(1)/1000*Fs);
+endRecord = round(period(2)/1000*Fs);
 numNeurons = size(R,2);
 numStimuli = size(S,1)*2;
 
