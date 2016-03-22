@@ -1,4 +1,4 @@
-function [S,timeStamps,effectivePixels] = WhiteNoise_ReverseCorrelation(flipInterval,Dist_To_Screen)
+function [S,timeStamps,effectivePixels] = WhiteNoise_ReverseCorrelation(flipInterval)
 %WhiteNoise_ReverseCorrelation.m
 %   Display a series of white noise stimuli to infer the receptive fields
 %    of neurons using reverse correlation.
@@ -36,15 +36,15 @@ function [S,timeStamps,effectivePixels] = WhiteNoise_ReverseCorrelation(flipInte
 %
 % Created: 2016/03/04, 24 Cummington, Boston
 %  Byron Price
-% Updated: 2016/03/05
+% Updated: 2016/03/22
 % By: Byron Price
 
 if nargin == 0
-    flipInterval = 200;
-    Dist_To_Screen = 30;
+    flipInterval = 300;
 end
 % Acquire a handle to OpenGL, so we can use OpenGL commands in our code:
 global GL;
+usb = usb1208FSPlusClass
 
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
@@ -52,7 +52,7 @@ AssertOpenGL;
 numStimuli = 100;
 TimeEstimate = numStimuli*2*(flipInterval/1000)/60;
 display(sprintf('Estimated time is %.2f minutes.',TimeEstimate))
-pause(1.5)
+WaitSecs(3);
 
 % Choose screen with maximum id - the secondary display:
 screenid = max(Screen('Screens'));
@@ -73,9 +73,14 @@ numPixels = minPix*minPix;
 effectivePixels = numPixels/(screenPix_to_effPix*screenPix_to_effPix);
 % uniformly-distributed noise (Is Gaussian-distributed noise white?)
 S = randi([0,255],[numStimuli,effectivePixels],'uint8');
+time_date = datenum(datetime);
+filename = strcat('WhiteNoise_Stimuli-',datestr(time_date,30));
+save(filename,'S');
+
 Grey = 128*ones(minPix,minPix);
 timeStamps = zeros(numStimuli*2,1);
 
+Priority(9);
 vbl = Screen('Flip', win);
 flipInterval = flipInterval/1000;
 for tt=1:numStimuli*2
@@ -90,10 +95,13 @@ for tt=1:numStimuli*2
     clear Img;
     timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
+    usb.triggerON(1,7);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);
-    Screen('Close', tex);
+    %Screen('Close', tex);
+    usb.triggerOFF(1,7);
 end
 % Close window
 Screen('CloseAll');
+Priority(0);
 end
 
