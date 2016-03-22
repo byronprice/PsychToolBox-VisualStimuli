@@ -41,6 +41,7 @@ function [S,timeStamps,effectivePixels] = WhiteNoise_ReverseCorrelation(flipInte
 
 if nargin == 0
     flipInterval = 300;
+    WaitTime = 160;
 end
 % Acquire a handle to OpenGL, so we can use OpenGL commands in our code:
 global GL;
@@ -83,6 +84,7 @@ timeStamps = zeros(numStimuli*2,1);
 Priority(9);
 vbl = Screen('Flip', win);
 flipInterval = flipInterval/1000;
+WaitTime = WaitTime/1000;
 for tt=1:numStimuli*2
     % Convert it to a texture 'tex':
     if mod(tt,2) == 1
@@ -96,11 +98,14 @@ for tt=1:numStimuli*2
     timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
     usb.triggerON(1,7);
+    WaitSecs(WaitTime);
     usb.triggerOFF(1,7);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);
+    %Screen('Close', tex);
 end
 % Close window
 Screen('CloseAll');
 Priority(0);
 end
+
 
