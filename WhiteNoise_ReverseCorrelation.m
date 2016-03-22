@@ -96,9 +96,8 @@ for tt=1:numStimuli*2
     timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
     usb.triggerON(1,7);
-    vbl = Screen('Flip',win, vbl + flipInterval-0.015);
-    %Screen('Close', tex);
     usb.triggerOFF(1,7);
+    vbl = Screen('Flip',win, vbl + flipInterval-0.015);
 end
 % Close window
 Screen('CloseAll');
