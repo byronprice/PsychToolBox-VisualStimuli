@@ -101,7 +101,7 @@ for tt=1:numStimuli*2
     WaitSecs(WaitTime);
     usb.triggerOFF(1,7);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);
-    %Screen('Close', tex);
+    Screen('Close', tex);
 end
 % Close window
 Screen('CloseAll');
