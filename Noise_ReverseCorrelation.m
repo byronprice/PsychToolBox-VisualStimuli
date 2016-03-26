@@ -1,5 +1,5 @@
-function [S,timeStamps,effectivePixels] = WhiteNoise_ReverseCorrelation(flipInterval)
-%WhiteNoise_ReverseCorrelation.m
+function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(flipInterval)
+%Noise_ReverseCorrelation.m
 %   Display a series of white noise stimuli to infer the receptive fields
 %    of neurons using reverse correlation.
 %    See Smyth et al. 2003 Receptive Field Organization ...
