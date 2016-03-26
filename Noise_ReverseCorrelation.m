@@ -35,7 +35,6 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(NoiseType,fli
 %          of the current display ... the display is forced to be square
 %          and the width in effectivePixels is 1/4 the width in true screen
 %          pixels
-%        Dist_To_Screen - as above
 %
 % Created: 2016/03/04, 24 Cummington, Boston
 %  Byron Price
@@ -92,11 +91,11 @@ elseif NoiseType == 'pink'
     convolution = y.*mask;
     %inverse Fourier
 else 
-    display('NoiseType must be /'white/' or /'pink/' ')
+    display('NoiseType must be \'white\' or \'pink\' ')
     return;
 end
 time_date = datenum(datetime);
-filename = strcat('WhiteNoise_Stimuli-',datestr(time_date,30));
+filename = strcat('Noise_Stimuli-',datestr(time_date,30));
 save(filename,'S');
 
 Grey = 128*ones(minPix,minPix);
