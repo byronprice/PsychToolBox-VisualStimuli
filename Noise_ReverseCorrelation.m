@@ -83,7 +83,18 @@ numPixels = minPix*minPix;
 
 effectivePixels = numPixels/(screenPix_to_effPix*screenPix_to_effPix);
 % uniformly-distributed noise (Is Gaussian-distributed noise white?)
-S = randi([0,255],[numStimuli,effectivePixels],'uint8');
+if NoiseType == 'white'
+    S = randi([0,255],[numStimuli,effectivePixels],'uint8');
+elseif NoiseType == 'pink'
+    S = randi([0,255],[numStimuli,effectivePixels],'uint8');
+    y = fftshift(fft2(S));
+    mask = 10;
+    convolution = y.*mask;
+    %inverse Fourier
+else 
+    display('NoiseType must be /'white/' or /'pink/' ')
+    return;
+end
 time_date = datenum(datetime);
 filename = strcat('WhiteNoise_Stimuli-',datestr(time_date,30));
 save(filename,'S');
@@ -117,4 +128,3 @@ end
 Screen('CloseAll');
 Priority(0);
 end
-
