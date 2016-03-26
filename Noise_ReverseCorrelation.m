@@ -1,4 +1,4 @@
-function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(flipInterval)
+function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(NoiseType,flipInterval,WaitTime)
 %Noise_ReverseCorrelation.m
 %   Display a series of white noise stimuli to infer the receptive fields
 %    of neurons using reverse correlation.
@@ -16,10 +16,13 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(flipInterval)
 %  grey.  The stimuli will be output as the matrix S, along with the 
 %  timeStamps for when they were generated.
 %
-%INPUT: flipInterval - time (milliseconds) to display the noise, then the
+%INPUT:  Optional Inputs
+%       NoiseType - 'white' or 'pink' ... defaults to white
+%       flipInterval - time (milliseconds) to display the noise, then the
 %          grey screen ... the screen will flip from grey to noise to grey
 %          and each will display for flipInterval milliseconds
-%       Dist_To_Screen - distasnce to the screen (cm)
+%       WaitTime - time (milliseconds) during which microscope will record
+%          the visually-evoked response
 %
 %OUTPUT: S - matrix sized numStimuli-by-numPixels that represent each of
 %          the stimuli presented, try 
@@ -36,12 +39,19 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(flipInterval)
 %
 % Created: 2016/03/04, 24 Cummington, Boston
 %  Byron Price
-% Updated: 2016/03/22
+% Updated: 2016/03/25
 % By: Byron Price
 
-if nargin == 0
-    flipInterval = 300;
-    WaitTime = 160;
+switch nargin
+    case 0
+        NoiseType = 'white';
+        flipInterval = 200;
+        WaitTime = 150;
+    case 1
+        flipInterval = 200;
+        WaitTime = 150;
+    case 2 
+        WaitTime = 150;
 end
 % Acquire a handle to OpenGL, so we can use OpenGL commands in our code:
 global GL;
@@ -107,5 +117,4 @@ end
 Screen('CloseAll');
 Priority(0);
 end
-
 
