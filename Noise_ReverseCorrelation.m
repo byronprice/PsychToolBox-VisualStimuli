@@ -59,7 +59,7 @@ usb = usb1208FSPlusClass
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
-numStimuli = 20;
+numStimuli = 100;
 TimeEstimate = numStimuli*2*(flipInterval/1000)/60;
 display(sprintf('Estimated time is %.2f minutes.',TimeEstimate))
 WaitSecs(3);
@@ -90,7 +90,8 @@ elseif strcmp(NoiseType,'pink') == 1
     for ii=1:numStimuli
         stim = reshape(S(ii,:),[N,N]);
         y = fft2(stim);
-        mask = bsxfun(@times,1./(1:N),1./(1:N)');
+        myFun = 1./(1:N);
+        mask = bsxfun(@times,myFun,myFun');
         y = y.*mask;
         stim = real(ifft2(y));
         stim = reshape(stim,[N*N,1]);
