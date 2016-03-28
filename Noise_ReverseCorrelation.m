@@ -38,7 +38,7 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(NoiseType,fli
 %
 % Created: 2016/03/04, 24 Cummington, Boston
 %  Byron Price
-% Updated: 2016/03/25
+% Updated: 2016/03/28
 % By: Byron Price
 
 switch nargin
@@ -59,7 +59,7 @@ usb = usb1208FSPlusClass
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
-numStimuli = 100;
+numStimuli = 20;
 TimeEstimate = numStimuli*2*(flipInterval/1000)/60;
 display(sprintf('Estimated time is %.2f minutes.',TimeEstimate))
 WaitSecs(3);
@@ -82,16 +82,24 @@ numPixels = minPix*minPix;
 
 effectivePixels = numPixels/(screenPix_to_effPix*screenPix_to_effPix);
 % uniformly-distributed noise (Is Gaussian-distributed noise white?)
-if NoiseType == 'white'
+if strcmp(NoiseType,'white') == 1
     S = randi([0,255],[numStimuli,effectivePixels],'uint8');
-elseif NoiseType == 'pink'
+elseif strcmp(NoiseType,'pink') == 1
     S = randi([0,255],[numStimuli,effectivePixels],'uint8');
-    y = fftshift(fft2(S));
-    mask = 10;
-    convolution = y.*mask;
-    %inverse Fourier
+    N = sqrt(effectivePixels);
+    for ii=1:numStimuli
+        stim = reshape(S(ii,:),[N,N]);
+        y = fft2(stim);
+        mask = bsxfun(@times,1./(1:N),1./(1:N)');
+        y = y.*mask;
+        stim = real(ifft2(y));
+        stim = reshape(stim,[N*N,1]);
+        stim = stim-min(stim);
+        stim = round(stim.*(255/max(stim)));
+        S(ii,:) = reshape(uint8(stim),[N,N]);
+    end
 else 
-    display('NoiseType must be \'white\' or \'pink\' ')
+    display('NoiseType must be ''white'' or ''pink'' as a string.')
     return;
 end
 time_date = datenum(datetime);
