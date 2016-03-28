@@ -96,7 +96,7 @@ elseif strcmp(NoiseType,'pink') == 1
         stim = reshape(stim,[N*N,1]);
         stim = stim-min(stim);
         stim = round(stim.*(255/max(stim)));
-        S(ii,:) = reshape(uint8(stim),[N,N]);
+        S(ii,:) = reshape(uint8(stim),[1,N*N]);
     end
 else 
     display('NoiseType must be ''white'' or ''pink'' as a string.')
