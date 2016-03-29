@@ -44,8 +44,8 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(NoiseType,fli
 switch nargin
     case 0
         NoiseType = 'white';
-        flipInterval = 200;
-        WaitTime = 150;
+        flipInterval = 1000;
+        WaitTime = 400;
     case 1
         flipInterval = 200;
         WaitTime = 150;
@@ -54,12 +54,14 @@ switch nargin
 end
 % Acquire a handle to OpenGL, so we can use OpenGL commands in our code:
 global GL;
-usb = usb1208FSPlusClass
+%usb = usb1208FSPlusClass
+
+DistToScreen = 20; % in cm
 
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
-numStimuli = 100;
+numStimuli = 50;
 TimeEstimate = numStimuli*2*(flipInterval/1000)/60;
 display(sprintf('Estimated time is %.2f minutes.',TimeEstimate))
 WaitSecs(3);
@@ -90,8 +92,11 @@ elseif strcmp(NoiseType,'pink') == 1
     for ii=1:numStimuli
         stim = reshape(S(ii,:),[N,N]);
         y = fft2(stim);
-        myFun = 1./(1:N);
-        mask = bsxfun(@times,myFun,myFun');
+        xfreq = (1./(1:N))./40;
+        xfreq = bsxfun(@times,xfreq,ones(length(xfreq),1));
+        yfreq = xfreq';
+        mask = 1./sqrt(xfreq.^2+yfreq.^2);
+        mask = rot90(mask,2);
         y = y.*mask;
         stim = real(ifft2(y));
         stim = reshape(stim,[N*N,1]);
@@ -126,10 +131,10 @@ for tt=1:numStimuli*2
     clear Img;
     timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
-    usb.triggerON(1,7);
-    WaitSecs(WaitTime);
-    usb.triggerOFF(1,7);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);
+     %usb.triggerON(1,7);
+    WaitSecs(WaitTime);
+    %usb.triggerOFF(1,7);
     Screen('Close', tex);
 end
 % Close window

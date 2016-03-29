@@ -52,7 +52,7 @@ Screen('ColorRange', win, 1);
 [w_pixels, h_pixels] = Screen('WindowSize', win);
 
 if nargin == 0
-    Display_Time = 30;
+    Display_Time = 100;
     Dist_To_Screen = 30;
     N = 100;
     Parameters = zeros(N,8);
@@ -65,6 +65,7 @@ if nargin == 0
             yTop = ((j-1)/nums)*h_pixels;
             yBottom = ((j)/nums)*h_pixels;
             Parameters(count,:) = [2*rand,rand,0.5*rand+0.5,360*rand,xLeft,xRight,yTop,yBottom];
+            %Parameters(count,:) = [1,2,1,45,xLeft,xRight,yTop,yBottom];
             count = count+1;
         end
     end
