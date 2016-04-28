@@ -54,7 +54,7 @@ Screen('ColorRange', win, 1);
 if nargin == 0
     Display_Time = 100;
     Dist_To_Screen = 30;
-    N = 100;
+    N = 1;
     Parameters = zeros(N,8);
     count = 1;
     nums = sqrt(N);
@@ -143,7 +143,6 @@ fprintf('Approximate display time in seconds was %f\n',Display_Time);
 
 % Close window
 Screen('CloseAll');
-
 end
 
 

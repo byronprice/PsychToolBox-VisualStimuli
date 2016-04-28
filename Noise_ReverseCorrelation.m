@@ -44,8 +44,8 @@ function [S,timeStamps,effectivePixels] = Noise_ReverseCorrelation(NoiseType,fli
 switch nargin
     case 0
         NoiseType = 'white';
-        flipInterval = 1000;
-        WaitTime = 400;
+        flipInterval = 200;
+        WaitTime = 150;
     case 1
         flipInterval = 200;
         WaitTime = 150;
@@ -61,10 +61,10 @@ DistToScreen = 20; % in cm
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
-numStimuli = 50;
+numStimuli = 2000;
 TimeEstimate = numStimuli*2*(flipInterval/1000)/60;
 display(sprintf('Estimated time is %.2f minutes.',TimeEstimate))
-WaitSecs(3);
+WaitSecs(5);
 
 % Choose screen with maximum id - the secondary display:
 screenid = max(Screen('Screens'));
@@ -132,9 +132,9 @@ for tt=1:numStimuli*2
     timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);
-     %usb.triggerON(1,7);
+    usb.triggerON(1,7);
     WaitSecs(WaitTime);
-    %usb.triggerOFF(1,7);
+    usb.triggerOFF(1,7);
     Screen('Close', tex);
 end
 % Close window
