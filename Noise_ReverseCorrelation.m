@@ -135,6 +135,7 @@ for tt=1:numStimuli*2
     usb.triggerON(1,7);
     WaitSecs(WaitTime);
     usb.triggerOFF(1,7);
+    %usb.strobe;
     Screen('Close', tex);
 end
 % Close window
