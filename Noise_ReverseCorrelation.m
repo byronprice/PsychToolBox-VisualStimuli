@@ -129,9 +129,8 @@ for tt=1:numStimuli*2
     end
     tex = Screen('MakeTexture',win,Img);
     clear Img;
-    timeStamps(tt) = GetSecs;
     Screen('DrawTexture',win, tex);
-    vbl = Screen('Flip',win, vbl + flipInterval-0.015);
+    vbl = Screen('Flip',win, vbl + flipInterval-0.015);timeStamps(tt) = GetSecs;
     usb.triggerON(1,7);
     WaitSecs(WaitTime);
     usb.triggerOFF(1,7);
