@@ -54,7 +54,7 @@ switch nargin
 end
 % Acquire a handle to OpenGL, so we can use OpenGL commands in our code:
 global GL;
-%usb = usb1208FSPlusClass
+usb = usb1208FSPlusClass
 
 DistToScreen = 20; % in cm
 
@@ -132,8 +132,8 @@ for tt=1:numStimuli*2
     Screen('DrawTexture',win, tex);
     vbl = Screen('Flip',win, vbl + flipInterval-0.015);timeStamps(tt) = GetSecs;
     usb.triggerON(1,7);
-    WaitSecs(WaitTime);
     usb.triggerOFF(1,7);
+    WaitSecs(WaitTime);
     %usb.strobe;
     Screen('Close', tex);
 end

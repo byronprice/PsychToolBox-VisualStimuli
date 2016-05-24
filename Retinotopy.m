@@ -48,8 +48,8 @@ conv_factor = (w_mm/w_pixels+h_mm/h_pixels)/2;
 Radius = ((tan(degreeRadius*(2*pi)/360))*(Dist_To_Screen*10))./conv_factor; % get number of pixels
      % that 1 degree of visual space will occupy
 Radius = round(Radius);
-CenterX = Radius:Radius:w_pixels;
-CenterY = Radius:Radius:h_pixels;
+CenterX = Radius:Radius*2:w_pixels;
+CenterY = Radius:Radius*2:h_pixels;
 
 dgshader = [directory '/Retinotopy.vert.txt'];
 GratingShader = LoadGLSLProgramFromFiles({ dgshader, [directory '/Retinotopy.frag.txt'] }, 1);
@@ -62,6 +62,7 @@ gratingTex = Screen('SetOpenGLTexture', win, [], 0, GL.TEXTURE_3D,w_pixels,...
 % size
 Color = [0,0,0,0;1,1,1,1];
 
+usb.startRecording;
 
 % Perform initial flip to gray background and sync us to the retrace:
 vbl = Screen('Flip', win);
@@ -72,6 +73,7 @@ for ii=1:length(CenterX)
   for jj=1:length(CenterY)
 
     % Draw the procedural texture as any other texture via 'DrawTexture'
+    %usb.strobe;
     for kk=1:8
         value = mod(kk,2)+1;
         Screen('DrawTexture', win,gratingTex, [],[],...
@@ -80,9 +82,9 @@ for ii=1:length(CenterX)
             Radius,CenterX(ii),CenterY(jj),0]);
             % Request stimulus onset
             vbl = Screen('Flip', win, vbl + 5*ifi/2);
-            %usb.triggerON(1,7);
-            %usb.triggerOFF(1,7);
+
      end
+     %usb.strobe;
 
      Screen('DrawTexture', win,gratingTex, [],[],...
          [],[],[],[0.5 0.5 0.5 0.5],...
@@ -93,13 +95,7 @@ for ii=1:length(CenterX)
     vbl = vbl+1.0;
   end
 end
-
-% Print some fps stats:
-avgfps = count / (vbl - ts);
-fprintf('Average redraw rate in Hz was: %f\n', avgfps);
-
-Display_Time = runs/avgfps;
-fprintf('Approximate display time in seconds was %f\n',Display_Time);
+usb.stopRecording;
 
 % Close window
 Screen('CloseAll');
