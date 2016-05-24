@@ -17,6 +17,8 @@ global GL;
 % Make sure this is running on OpenGL Psychtoolbox:
 AssertOpenGL;
 
+%usb = usb1208FSPlusClass
+
 % Choose screen with maximum id - the secondary display:
 screenid = max(Screen('Screens'));
 
@@ -78,6 +80,8 @@ for ii=1:length(CenterX)
             Radius,CenterX(ii),CenterY(jj),0]);
             % Request stimulus onset
             vbl = Screen('Flip', win, vbl + 5*ifi/2);
+            %usb.triggerON(1,7);
+            %usb.triggerOFF(1,7);
      end
 
      Screen('DrawTexture', win,gratingTex, [],[],...
