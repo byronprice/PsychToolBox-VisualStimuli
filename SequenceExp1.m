@@ -80,8 +80,9 @@ Parameters(:,2) = Parameters(:,2).*ifi;
 %Parameters(:,4) = (Dist_To_Screen.*tan(Parameters(:,4).*(pi/180)))./conv_factor; % radius in degrees to radius in mm
 Parameters(:,4) = Parameters(:,4).*(pi/180);
 
-dgshader = [PsychtoolboxRoot '/DriftingSinGratingShader.vert.txt'];
-GratingShader = LoadGLSLProgramFromFiles({ dgshader, [PsychtoolboxRoot '/DriftingSinGratingShader.frag.txt'] }, 1);
+directory = pwd;
+dgshader = [directory '/DriftingSinGratingShader.vert.txt'];
+GratingShader = LoadGLSLProgramFromFiles({ dgshader, [directory '/DriftingSinGratingShader.frag.txt'] }, 1);
 
 
 % Define first and second ring color as RGBA vector with normalized color
